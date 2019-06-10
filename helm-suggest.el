@@ -53,7 +53,9 @@
     ;; (goto-char url-http-end-of-headers)
     (goto-char (point-min))
     (re-search-forward "^\r?\n")
-    (funcall parser)))
+    ;; FIXME Handle HTTP error
+    (prog1 (funcall parser)
+      (kill-buffer (current-buffer)))))
 
 (defun helm-suggest--url-encode-params (params)
   (mapconcat
