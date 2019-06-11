@@ -52,8 +52,7 @@ too many requests."
 
 (defun helm-suggest--url-retrieve-sync (url parser)
   (with-current-buffer
-      (let ((url-user-agent "helm-suggest (github.com/xuchunyang/helm-suggest)")
-            (url-show-status nil))
+      (let ((url-show-status nil))
         (url-retrieve-synchronously url))
     (set-buffer-multibyte t)
     ;; (goto-char url-http-end-of-headers)
