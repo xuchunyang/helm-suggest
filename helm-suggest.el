@@ -36,6 +36,12 @@
   "Web suggest (autocomplete) with helm."
   :group 'helm)
 
+(defcustom helm-suggest-input-idle-delay 0.6
+  "Same as `helm-input-idle-delay' but for helm suggest commands.
+It have a higher value than `helm-input-idle-delay' to avoid
+too many requests."
+  :type 'float)
+
 (defun helm-suggest--json-read ()
   (let ((json-object-type 'alist)
         (json-array-type  'list)
@@ -129,6 +135,7 @@
 (defun helm-suggest-baidu-dict ()
   "Search with suggestion with 百度汉语."
   (interactive)
+  (helm-set-local-variable 'helm-input-idle-delay helm-suggest-input-idle-delay)
   (helm :sources helm-suggest--baidu-dict-source
         :full-frame t
         :buffer "*helm 百度汉语*"))
@@ -195,6 +202,7 @@
   "Search with suggestion with 百度翻译."
   ;; IDEA Fill initial input from the region?
   (interactive)
+  (helm-set-local-variable 'helm-input-idle-delay helm-suggest-input-idle-delay)  
   (helm :sources helm-suggest--baidu-fanyi-source
         :buffer "*helm 百度翻译*"))
 
@@ -240,6 +248,7 @@
 (defun helm-suggest-ldoceonline ()
   "Search with suggestion with ldoceonline."
   (interactive)
+  (helm-set-local-variable 'helm-input-idle-delay helm-suggest-input-idle-delay)  
   (helm :sources helm-suggest--ldoceonline-source
         :buffer "*helm ldoceonline*"))
 
@@ -286,6 +295,7 @@
 (defun helm-suggest-douban-book ()
   "Search with suggestion with 豆瓣读书."
   (interactive)
+  (helm-set-local-variable 'helm-input-idle-delay helm-suggest-input-idle-delay)  
   (helm :sources helm-suggest--douban-book-source
         :full-frame t
         :buffer "*helm 豆瓣读书*"))
