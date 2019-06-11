@@ -13,24 +13,24 @@ Web suggest (autocomplete) with helm. It supports these web sites:
 
 ### `M-x helm-suggest-baidu-dict`
 
-![M-x helm-suggest-baidu-dict](helm-suggest-baidu-dict.png)
+![M-x helm-suggest-baidu-dict](imgs/helm-suggest-baidu-dict.png)
 
 ### `M-x helm-suggest-baidu-fanyi`
 
-![M-x helm-suggest-baidu-fanyi](helm-suggest-baidu-fanyi.png)
+![M-x helm-suggest-baidu-fanyi](imgs/helm-suggest-baidu-fanyi.png)
 
 ### `M-x helm-suggest-ldoceonline`
 
-![M-x helm-suggest-ldoceonline](helm-suggest-ldoceonline.png)
+![M-x helm-suggest-ldoceonline](imgs/helm-suggest-ldoceonline.png)
 
 ### `M-x helm-suggest-douban-book`
 
-![M-x helm-suggest-douban-book](helm-suggest-douban-book.png)
+![M-x helm-suggest-douban-book](imgs/helm-suggest-douban-book.png)
 
 ### `M-x helm-suggest-urban`
 
-![M-x helm-suggest-urban](helm-suggest-urban.png)
+![M-x helm-suggest-urban](imgs/helm-suggest-urban.png)
 
 ### `M-x helm-suggest-commandlinefu`
 
-![M-x helm-suggest-commandlinefu](helm-suggest-commandlinefu.png)
+![M-x helm-suggest-commandlinefu](imgs/helm-suggest-commandlinefu.png)
