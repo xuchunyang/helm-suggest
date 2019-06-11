@@ -299,5 +299,54 @@ too many requests."
         :full-frame t
         :buffer "*helm 豆瓣读书*"))
 
+;; * [Urban Dictionary, June 10: Bend and Snap](https://www.urbandictionary.com/)
+;;
+;; API: https://api.urbandictionary.com/v0/autocomplete-extra?key=ab71d33b15d36506acf1e379b0ed07ee&term=accep
+
+(defun helm-suggest--urban-fetch (query)
+  (helm-suggest--url-retrieve-sync
+   (format
+    "https://api.urbandictionary.com/v0/autocomplete-extra?key=ab71d33b15d36506acf1e379b0ed07ee&term=%s"
+    (url-hexify-string query))
+   #'helm-suggest--json-read))
+
+(defun helm-suggest--urban-candidates ()
+  (mapcar
+   (lambda (alist)
+     (let-alist alist
+       (format "%-20s  %s" .term .preview)))
+   (alist-get 'results (helm-suggest--urban-fetch helm-pattern))))
+
+(defvar helm-suggest--urban-actions
+  (helm-make-actions
+   "Browse URL"
+   (lambda (candidate)
+     (browse-url
+      (format "https://www.urbandictionary.com/define.php?term=%s"
+              (url-hexify-string (car (split-string candidate "  "))))))
+   "Insert Term"
+   (lambda (candidate)
+     (insert (car (split-string candidate "  "))))))
+
+(defvar helm-suggest--urban-source
+  (helm-build-sync-source "Urban Dictionary"
+    :header-name
+    (lambda (name)
+      (format "%s <%s>" name "https://www.urbandictionary.com/"))
+    :candidates #'helm-suggest--urban-candidates
+    :action helm-suggest--urban-actions
+    :volatile t
+    :nohighlight t
+    :requires-pattern 1))
+
+;;;###autoload
+(defun helm-suggest-urban ()
+  "Search with suggestion with Urban Dictionary."
+  (interactive)
+  (helm-set-local-variable 'helm-input-idle-delay helm-suggest-input-idle-delay)  
+  (helm :sources helm-suggest--urban-source
+        :full-frame t
+        :buffer "*helm Urban Dictionary*"))
+
 (provide 'helm-suggest)
 ;;; helm-suggest.el ends here
