@@ -31,6 +31,7 @@
 (require 'url)
 (require 'json)
 (require 'subr-x)                       ; `string-trim'
+(require 'dom)
 
 (defgroup helm-suggest nil
   "Web suggest (autocomplete) with helm."
@@ -347,6 +348,87 @@ too many requests."
   (helm :sources helm-suggest--urban-source
         :full-frame t
         :buffer "*helm Urban Dictionary*"))
+
+;; * [commandlinefu](https://www.commandlinefu.com/)
+;;
+;; API: curl 'https://www.commandlinefu.com/search/autocomplete' -d q=grep
+
+(defun helm-suggest--commandlinefu-trim (s)
+  (string-trim
+   (replace-regexp-in-string
+    " +" " "
+    (replace-regexp-in-string
+     "\n" " "
+     s))))
+
+(defun helm-suggest--commandlinefu-fetch (query)
+  (let ((url-request-method "POST")
+        (url-request-extra-headers
+         '(("Content-Type" . "application/x-www-form-urlencoded")))
+        (url-request-data
+         (encode-coding-string
+          (helm-suggest--url-encode-params `(("q" . ,query)))
+          'utf-8)))
+    (helm-suggest--url-retrieve-sync
+     "https://www.commandlinefu.com/search/autocomplete"
+     (lambda () (libxml-parse-html-region (point) (point-max))))))
+
+;; <ul>
+;;   <li>
+;;     <div class="autocomplete-command"><strong>grep</strong> -RnisI &lt;pattern&gt; *</div>
+;;     <div class="autocomplete-description">
+;;       Search for a <pattern> string inside all files in the current directory (49 votes, 3 comments)
+;;     </div>
+;;     <a style="display:none" class="destination" href="/commands/view/3573/search-for-a-string-inside-all-files-in-the-current-directory"></a>
+;;   </li>
+;; </ul>
+(defun helm-suggest--commandlinefu-candidates ()
+  (delq
+   nil
+   (mapcar
+    (lambda (li)
+      (let ((command (helm-suggest--commandlinefu-trim
+                      (dom-texts (dom-by-class li "autocomplete-command") "")))
+            (description (helm-suggest--commandlinefu-trim
+                          (dom-texts (dom-by-class li "autocomplete-description"))))
+            (link (concat "https://www.commandlinefu.com/" (dom-attr (dom-by-class li "destination") 'href))))
+        ;; <li style="display:none"></li><li>   
+        (unless (string-empty-p command)
+          (cons (format "%s\n%s" command description)
+                `((command . ,command)
+                  (description . ,description)
+                  (link . ,link))))))
+    (dom-by-tag (helm-suggest--commandlinefu-fetch helm-pattern) 'li))))
+
+(defvar helm-suggest--commandlinefu-actions
+  (helm-make-actions
+   "Browse URL"
+   (lambda (alist)
+     (browse-url (let-alist alist .link)))
+   "Insert Command"
+   (lambda (alist)
+     (insert (let-alist alist .command)))))
+
+(defvar helm-suggest--commandlinefu-source
+  (helm-build-sync-source "Commandlinefu"
+    :header-name
+    (lambda (name)
+      (format "%s <%s>" name "https://www.commandlinefu.com/"))
+    :candidates #'helm-suggest--commandlinefu-candidates
+    :multiline t
+    :nohighlight t
+    :action helm-suggest--commandlinefu-actions
+    :volatile t
+    :requires-pattern 1))
+
+;;;###autoload
+(defun helm-suggest-commandlinefu ()
+  "Search with suggestion with commandlinefu."
+  (interactive)
+  (helm-set-local-variable 'helm-input-idle-delay helm-suggest-input-idle-delay)  
+  (helm :sources helm-suggest--commandlinefu-source
+        :full-frame t
+        :buffer "*helm commandlinefu*"))
 
 (provide 'helm-suggest)
 ;;; helm-suggest.el ends here
