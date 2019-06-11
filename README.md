@@ -2,11 +2,12 @@
 
 Web suggest (autocomplete) with helm. It supports these web sites:
 
-- [百度汉语 - 更懂汉语，更懂你](https://dict.baidu.com/)
+- [百度汉语](https://dict.baidu.com/)
 - [百度翻译](https://fanyi.baidu.com/)
-- [Longman Dictionary of Contemporary English | LDOCE](https://www.ldoceonline.com/)
+- [Longman Dictionary of Contemporary English](https://www.ldoceonline.com/)
 - [豆瓣读书](https://book.douban.com/)
-- [Urban Dictionary, June 10: Bend and Snap](https://www.urbandictionary.com/)
+- [Urban Dictionary](https://www.urbandictionary.com/)
+- [commandlinefu](https://www.commandlinefu.com/)
 
 ## Usage and screenshot
 
@@ -29,3 +30,7 @@ Web suggest (autocomplete) with helm. It supports these web sites:
 ### `M-x helm-suggest-urban`
 
 ![M-x helm-suggest-urban](helm-suggest-urban.png)
+
+### `M-x helm-suggest-commandlinefu`
+
+![M-x helm-suggest-commandlinefu](helm-suggest-commandlinefu.png)
