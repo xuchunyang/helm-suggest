@@ -37,7 +37,7 @@
   "Web suggest (autocomplete) with helm."
   :group 'helm)
 
-(defcustom helm-suggest-input-idle-delay 0.6
+(defcustom helm-suggest-input-idle-delay 0.2
   "Same as `helm-input-idle-delay' but for helm suggest commands.
 It have a higher value than `helm-input-idle-delay' to avoid
 too many requests."
